@@ -83,7 +83,7 @@ resource "aws_security_group" "emr_master" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name = "EMR_master"
   }
 }
@@ -124,7 +124,7 @@ resource "aws_security_group" "emr_slave" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name = "EMR_slave"
   }
 }
