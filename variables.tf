@@ -15,3 +15,4 @@ variable "core_instance_count" {}
 variable "core_bid_price" {}
 variable "core_ebs_size" {}
 variable "ingress_cidr_blocks" {}
+variable "logging_bucket" {}

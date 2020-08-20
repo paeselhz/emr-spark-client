@@ -1,9 +1,9 @@
 terraform {
   backend "s3" {
     encrypt = true
-    bucket  = "terraform-persistence"
+    bucket  = var.logging_bucket
     key     = "terraform-emr-cluster.tfstate"
-    region  = "us-east-1"
+    region  = var.region
   }
 }
 
