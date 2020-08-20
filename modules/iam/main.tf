@@ -74,3 +74,20 @@ resource "aws_iam_instance_profile" "emr_ec2_instance_profile" {
   name = aws_iam_role.emr_ec2_instance_profile.name
   role = aws_iam_role.emr_ec2_instance_profile.name
 }
+
+// IAM resources for RStudio AMI
+
+resource "aws_iam_role" "rstudio_ec2_instance_profile" {
+  name               = "EC2_InstanceProfile"
+  assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "rstudio_ec2_instance_profile" {
+  role       = aws_iam_role.rstudio_ec2_instance_profile.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+}
+
+resource "aws_iam_instance_profile" "rstudio_ec2_instance_profile" {
+  name = aws_iam_role.rstudio_ec2_instance_profile.name
+  role = aws_iam_role.rstudio_ec2_instance_profile.name
+}

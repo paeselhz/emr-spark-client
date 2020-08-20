@@ -9,3 +9,7 @@ output "emr_autoscaling_role" {
 output "emr_ec2_instance_profile" {
   value = aws_iam_instance_profile.emr_ec2_instance_profile.arn
 }
+
+output "rstudio_ec2_instance_profile" {
+  value = aws_iam_instance_profile.rstudio_ec2_instance_profile.arn
+}
