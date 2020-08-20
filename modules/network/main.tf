@@ -4,7 +4,7 @@ resource "aws_vpc" "emr-cluster-vpc" {
     enable_dns_hostnames = true
     enable_dns_support = true
 
-    tags {
+    tags = {
         Name = "EMR Cluster VPC"
     }
 }
@@ -15,7 +15,7 @@ resource "aws_subnet" "emr-cluster-public-subnet" {
   cidr_block        = "10.0.0.0/24"
   availability_zone = var.region
 
-  tags {
+  tags = {
     Name = "EMR Cluster Public Subnet"
   }
 }
@@ -23,7 +23,7 @@ resource "aws_subnet" "emr-cluster-public-subnet" {
 resource "aws_internet_gateway" "emr-cluster-gateway" {
   vpc_id = aws_vpc.emr-cluster-vpc.id
 
-  tags {
+  tags = {
     Name = "EMR Cluster Gateway"
   }
 }
@@ -36,7 +36,7 @@ resource "aws_route_table" "emr-cluster-public-routing-table" {
     gateway_id = aws_internet_gateway.emr-cluster-gateway.id
   }
 
-  tags {
+  tags = {
     Name = "EMR Cluster Route Table"
   }
 }
