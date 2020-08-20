@@ -3,6 +3,9 @@ resource "aws_s3_bucket" "create_bucket" {
   bucket = var.name
   acl    = "private"
 
+//  This will allow the bucket to be destroyed with the cluster
+  force_destroy = true
+
   tags = {
     Name        = "Bucket for EMR Bootstrap actions/Steps"
     Environment = "Scripts"
