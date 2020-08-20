@@ -97,11 +97,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
       action_on_failure = "CANCEL_AND_WAIT"
       hadoop_jar_step {
         jar  = "command-runner.jar"
-        args = ["sudo", "bash", "/home/hadoop/create-emr-client.sh",
-                {
-                  Ref: "s3://${var.name}"
-                }
-        ]
+        args = ["sudo", "bash", "/home/hadoop/create-emr-client.sh", "s3://${var.name}"]
       }
   }
 

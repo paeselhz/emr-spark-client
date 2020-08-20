@@ -1,6 +1,6 @@
 #!/bin/bash
 
-emrClientDepsPath=${1%/}/emr-client
+emrClientDepsPath=${1%/}
 echo "EMR client dependencies path: "$emrClientDepsPath
 
 cd /mnt
