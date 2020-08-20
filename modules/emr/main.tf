@@ -63,7 +63,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   //  Below are tags created to help identify the resources of this request in AWS Console
   //  Also is set the service role and autoscaling roles
 
-  tags {
+  tags = {
     Name = "${var.name} - Spark cluster"
   }
 
