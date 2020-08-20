@@ -23,5 +23,5 @@ resource "aws_s3_bucket_object" "shell_script_emr_create_client" {
   bucket     = var.name
   key        = "scripts/create-emr-client.sh"
   source     = "scripts/create-emr-client.sh"
-  depends_on = ["aws_s3_bucket.create_bucket"]
+  depends_on = [aws_s3_bucket.create_bucket]
 }
