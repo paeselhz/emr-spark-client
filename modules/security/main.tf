@@ -5,6 +5,7 @@ resource "aws_security_group" "emr_master" {
   vpc_id                 = var.vpc_id
   revoke_rules_on_delete = true
 
+//  Allow SSH traffic from VPN
   ingress {
     from_port   = 22
     to_port     = 22
@@ -12,6 +13,7 @@ resource "aws_security_group" "emr_master" {
     cidr_blocks = [var.ingress_cidr_blocks]
   }
 
+// Spark UI ingress
   ingress {
     from_port   = 4040
     to_port     = 4040
@@ -19,6 +21,7 @@ resource "aws_security_group" "emr_master" {
     cidr_blocks = [var.ingress_cidr_blocks]
   }
 
+//  HUE ingress
   ingress {
     from_port   = 8888
     to_port     = 8888
@@ -26,11 +29,51 @@ resource "aws_security_group" "emr_master" {
     cidr_blocks = [var.ingress_cidr_blocks]
   }
 
+//  Yarn ingress
+  ingress {
+    from_port   = 8088
+    to_port     = 8088
+    protocol    = "TCP"
+    cidr_blocks = [var.ingress_cidr_blocks]
+  }
+
+// Spark History
+  ingress {
+      from_port   = 18080
+      to_port     = 18080
+      protocol    = "TCP"
+      cidr_blocks = [var.ingress_cidr_blocks]
+  }
+
+//  Zeppelin UI
+  ingress {
+      from_port   = 8890
+      to_port     = 8890
+      protocol    = "TCP"
+      cidr_blocks = [var.ingress_cidr_blocks]
+  }
+
+
   ingress {
     from_port   = 20888
     to_port     = 20888
     protocol    = "tcp"
-    cidr_blocks = [var.ingress_cidr_blocks]
+    cidr_blocks = [
+      var.ingress_cidr_blocks]
+  }
+
+//  Allow communication between nodes in VPC
+  ingress {
+    from_port   = "0"
+    to_port     = "0"
+    protocol    = "-1"
+    self        = true
+  }
+
+  ingress {
+      from_port   = "8443"
+      to_port     = "8443"
+      protocol    = "TCP"
   }
 
   egress {
@@ -52,11 +95,26 @@ resource "aws_security_group" "emr_slave" {
   vpc_id                 = var.vpc_id
   revoke_rules_on_delete = true
 
+//  Allow SSH traffic from VPN
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = [var.ingress_cidr_blocks]
+  }
+
+  //  Allow communication between nodes in VPC
+  ingress {
+    from_port   = "0"
+    to_port     = "0"
+    protocol    = "-1"
+    self        = true
+  }
+
+  ingress {
+      from_port   = "8443"
+      to_port     = "8443"
+      protocol    = "TCP"
   }
 
   egress {
