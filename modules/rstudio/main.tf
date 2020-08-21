@@ -12,11 +12,10 @@ resource "aws_instance" "rstudio-ec2-instance" {
 
   iam_instance_profile = var.ec2_iam_instance_profile
 
-  ebs_block_device {
-    device_name = "rstudio-ec2-ebs"
+  root_block_device {
+    delete_on_termination = true
     volume_size = var.ec2_ebs_size
     volume_type = "gp2"
-    delete_on_termination = true
   }
 
   key_name = var.key_name
@@ -25,6 +24,13 @@ resource "aws_instance" "rstudio-ec2-instance" {
   tags = {
     Name = "RStudio EC2 instance"
     EMR = var.associated_emr
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "centos"
+    private_key = file("~/Documents/aws/${var.key_name}.pem")
+    host        = self.public_ip
   }
 
   provisioner "remote-exec" {
