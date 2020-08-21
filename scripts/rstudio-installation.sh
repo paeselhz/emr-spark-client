@@ -14,6 +14,7 @@ mkdir download
 
 # Install R
 yum install -y \
+  epel-release \
   gcc \
   gcc-c++ \
   gcc-gfortran \
@@ -34,7 +35,8 @@ yum install -y \
   git \
   compat-gmp4 \
   compat-libffi5 \
-  wget
+  wget \
+  openblas-devel
 
 wget https://cdn.rstudio.com/r/centos-7/pkgs/R-4.0.0-1-1.x86_64.rpm -P download/
 yum install -y download/R-4.0.0-1-1.x86_64.rpm
@@ -48,9 +50,9 @@ wget https://download2.rstudio.org/server/centos6/x86_64/rstudio-server-rhel-1.3
 yum install -y download/rstudio-server-rhel-1.3.1073-x86_64.rpm
 
 # Install R packages for Spark
-R -e 'install.packages(c("sparklyr", "dplyr", "ggplot2"), repos="http://cran.rstudio.com")'
-rstudio-server verify-installation
+/usr/local/bin/R -e 'install.packages(c("sparklyr", "dplyr", "ggplot2"), repos="http://cran.rstudio.com")'
 rstudio-server stop
+rstudio-server verify-installation
 
 # Upgrade Java
 yum install -y java-1.8.0
@@ -61,9 +63,9 @@ wget https://downloads.lightbend.com/scala/2.12.8/scala-2.12.8.rpm -P download/
 yum install -y download/scala-2.12.8.rpm
 
 # Install Hadoop
-wget https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-3.2.1/hadoop-3.2.1.tar.gz -P download/
-tar xfz download/hadoop-3.2.1.tar.gz
-ln -s /home/rstudio/hadoop-3.2.1 /usr/lib/hadoop
+wget https://downloads.apache.org/hadoop/common/hadoop-3.2.1/hadoop-3.2.1-src.tar.gz -P download/
+tar xfz download/hadoop-3.2.1-src
+ln -s /home/rstudio/hadoop-3.2.1-src /usr/lib/hadoop
 rm -rf /usr/lib/hadoop/share/doc*
 
 # Install Spark
@@ -121,6 +123,8 @@ echo "www-address=$RStudioServerHost" >> /etc/rstudio/rserver.conf
 
 # Change ownership back to rstudio
 chown -R rstudio:rstudio /home/rstudio
+# Add rstudio user to sudoers group
+usermod -aG wheel rstudio
 
 # Restart RStudio Server
 rstudio-server start
