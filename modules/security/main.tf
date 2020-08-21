@@ -131,7 +131,7 @@ resource "aws_security_group" "emr_slave" {
 
 // Security group that will be used by the RStudio edge node
 
-resource "aws_security_group" "rstudio_ec2_security_group" {
+resource "aws_security_group" "rstudio_edge" {
   name                   = "${var.name} - RStudio"
   description            = "Security group for RStudio edge node."
   vpc_id                 = var.vpc_id
