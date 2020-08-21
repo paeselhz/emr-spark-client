@@ -42,7 +42,7 @@ module "emr" {
 }
 
 module "rstudio" {
-  source                   = './modules/rstudio'
+  source                   = "./modules/rstudio"
   name                     = var.name
   key_name                 = var.key_name
   subnet_id                = module.network.subnet_id
