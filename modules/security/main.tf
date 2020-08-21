@@ -128,3 +128,40 @@ resource "aws_security_group" "emr_slave" {
     Name = "EMR_slave"
   }
 }
+
+// Security group that will be used by the RStudio edge node
+
+resource "aws_security_group" "rstudio_ec2_security_group" {
+  name                   = "${var.name} - RStudio"
+  description            = "Security group for RStudio edge node."
+  vpc_id                 = var.vpc_id
+  revoke_rules_on_delete = true
+
+//  Allow SSH traffic from VPN
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.ingress_cidr_blocks]
+  }
+
+  //  Allow communication between nodes in VPC
+  ingress {
+    from_port   = "0"
+    to_port     = "0"
+    protocol    = "-1"
+    self        = true
+  }
+
+//  Expose RStudio server Port
+  ingress {
+      from_port   = "8787"
+      to_port     = "8787"
+      protocol    = "TCP"
+      cidr_blocks = [var.ingress_cidr_blocks]
+  }
+
+  tags = {
+    Name = "RStudio_edge_node"
+  }
+}
