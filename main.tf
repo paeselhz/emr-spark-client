@@ -40,3 +40,17 @@ module "emr" {
   emr_service_role          = module.iam.emr_service_role
   emr_autoscaling_role      = module.iam.emr_autoscaling_role
 }
+
+module "rstudio" {
+  source                   = './modules/rstudio'
+  name                     = var.name
+  key_name                 = var.key_name
+  subnet_id                = module.network.subnet_id
+  vpc_id                   = module.network.vpc_id
+  region                   = var.region
+  ec2_instance_type        = var.rstudio_instance_type
+  ec2_security_groups      = module.security.rstudio_ec2_security_group
+  ec2_iam_instance_profile = module.iam.rstudio_ec2_instance_profile
+  ec2_ebs_size             = var.rstudio_ebs_size
+  associated_emr           = module.emr.id
+}
