@@ -61,7 +61,7 @@ data "aws_iam_policy_document" "ec2_assume_role" {
 }
 
 resource "aws_iam_role" "emr_ec2_instance_profile" {
-  name               = "EC2_InstanceProfile"
+  name               = "EMR_EC2_InstanceProfile"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
 }
 
@@ -78,7 +78,7 @@ resource "aws_iam_instance_profile" "emr_ec2_instance_profile" {
 // IAM resources for RStudio AMI
 
 resource "aws_iam_role" "rstudio_ec2_instance_profile" {
-  name               = "EC2_InstanceProfile"
+  name               = "RStudio_EC2_InstanceProfile"
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
 }
 
