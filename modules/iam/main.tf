@@ -87,6 +87,11 @@ resource "aws_iam_role_policy_attachment" "rstudio_ec2_instance_profile" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
+resource "aws_iam_role_policy_attachment" "rstudio_ec2_instance_profile_s3" {
+  role       = aws_iam_role.rstudio_ec2_instance_profile.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
 resource "aws_iam_instance_profile" "rstudio_ec2_instance_profile" {
   name = aws_iam_role.rstudio_ec2_instance_profile.name
   role = aws_iam_role.rstudio_ec2_instance_profile.name

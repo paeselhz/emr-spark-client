@@ -35,9 +35,11 @@ resource "aws_instance" "rstudio-ec2-instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "mkdir /downloads",
-      "aws s3 cp s3://${var.name}/scripts/rstudio-installation.sh /downloads",
-      "sudo bash /downloads/rstudio-installation.sh s3://${var.name}"
+      "sleep 60",
+      "mkdir ~/downloads",
+      "sudo yum install -y awscli",
+      "aws s3 cp s3://${var.name}/scripts/rstudio-installation.sh ~/downloads",
+      "sudo bash ~/downloads/rstudio-installation.sh s3://${var.name}"
     ]
   }
 

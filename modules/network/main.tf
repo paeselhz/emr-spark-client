@@ -1,6 +1,6 @@
 // Creating the main VPC the will be used by the EMR Cluster
 resource "aws_vpc" "emr-cluster-vpc" {
-    cidr_block = "10.0.0.0/16"
+    cidr_block = "172.30.0.0/16"
     enable_dns_hostnames = true
     enable_dns_support = true
 
@@ -12,7 +12,7 @@ resource "aws_vpc" "emr-cluster-vpc" {
 // Creating the subnet which will be used by the gateway
 resource "aws_subnet" "emr-cluster-public-subnet" {
   vpc_id            = aws_vpc.emr-cluster-vpc.id
-  cidr_block        = "10.0.0.0/24"
+  cidr_block        = "172.30.0.0/24"
   availability_zone = "${var.region}a"
 
   tags = {

@@ -64,7 +64,7 @@ yum install -y download/scala-2.12.8.rpm
 
 # Install Hadoop
 wget https://downloads.apache.org/hadoop/common/hadoop-3.2.1/hadoop-3.2.1-src.tar.gz -P download/
-tar xfz download/hadoop-3.2.1-src
+tar xfz download/hadoop-3.2.1-src.tar.gz
 ln -s /home/rstudio/hadoop-3.2.1-src /usr/lib/hadoop
 rm -rf /usr/lib/hadoop/share/doc*
 
@@ -80,7 +80,7 @@ cd /
 
 # Waiting for EMR client dependencies to be uploaded, timeout after 20 minutes
 fileDeps=awsemrdeps.tgz
-emrDepsFilePath=$s3UploadPath/$fileDeps
+emrDepsFilePath=$s3Repo/$fileDeps
 
 echo "Waiting for: "$emrDepsFilePath
 waitTime=0
