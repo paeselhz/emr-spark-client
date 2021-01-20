@@ -5,13 +5,47 @@ resource "aws_security_group" "emr_master" {
   vpc_id                 = var.vpc_id
   revoke_rules_on_delete = true
 
-//  Allow SSH traffic from VPN
+//  Allow SSH traffic
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
     cidr_blocks = [var.ingress_cidr_blocks]
   }
+
+  //  Allow communication between nodes in VPC
+  ingress {
+    from_port   = "0"
+    to_port     = "0"
+    protocol    = "-1"
+    self        = true
+  }
+
+  ingress {
+      from_port   = "8443"
+      to_port     = "8443"
+      protocol    = "TCP"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "EMR_master"
+  }
+}
+
+// Additional Security group that will be used by the Master node in the cluster
+// to allow access to other services
+resource "aws_security_group" "emr_master_ad_sg" {
+  name                   = "${var.name} - EMR-master-additional"
+  description            = "Additional security group for EMR master."
+  vpc_id                 = var.vpc_id
+  revoke_rules_on_delete = true
 
 // Spark UI ingress
   ingress {
@@ -53,27 +87,19 @@ resource "aws_security_group" "emr_master" {
       cidr_blocks = [var.ingress_cidr_blocks]
   }
 
+//  RStudio Server
+  ingress {
+      from_port   = 8787
+      to_port     = 8787
+      protocol    = "TCP"
+      cidr_blocks = [var.ingress_cidr_blocks]
+  }
 
   ingress {
     from_port   = 20888
     to_port     = 20888
     protocol    = "tcp"
-    cidr_blocks = [
-      var.ingress_cidr_blocks]
-  }
-
-//  Allow communication between nodes in VPC
-  ingress {
-    from_port   = "0"
-    to_port     = "0"
-    protocol    = "-1"
-    self        = true
-  }
-
-  ingress {
-      from_port   = "8443"
-      to_port     = "8443"
-      protocol    = "TCP"
+    cidr_blocks = [var.ingress_cidr_blocks]
   }
 
   egress {
@@ -126,50 +152,5 @@ resource "aws_security_group" "emr_slave" {
 
   tags = {
     Name = "EMR_slave"
-  }
-}
-
-// Security group that will be used by the RStudio edge node
-
-resource "aws_security_group" "rstudio_edge" {
-  name                   = "${var.name} - RStudio"
-  description            = "Security group for RStudio edge node."
-  vpc_id                 = var.vpc_id
-  revoke_rules_on_delete = true
-
-//  Allow SSH traffic from VPN
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.ingress_cidr_blocks]
-  }
-
-  //  Allow communication between nodes in VPC
-  ingress {
-    from_port   = "0"
-    to_port     = "0"
-    protocol    = "-1"
-    self        = true
-  }
-
-//  Expose RStudio server Port
-  ingress {
-      from_port   = "8787"
-      to_port     = "8787"
-      protocol    = "TCP"
-      cidr_blocks = [var.ingress_cidr_blocks]
-  }
-
-//  Expose node to network
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "RStudio_edge_node"
   }
 }

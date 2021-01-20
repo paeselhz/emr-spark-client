@@ -9,6 +9,8 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   termination_protection            = false
   keep_job_flow_alive_when_no_steps = true
 
+//  custom_ami_id = var.ami_id
+
   //  Setting the EC2 attributes, as the subnet the cluster will be included
   //  The key name to ssh into the cluster, The cluster's security groups
   //  and instance profiles
@@ -18,10 +20,11 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
     key_name                          = var.key_name
     emr_managed_master_security_group = var.emr_master_security_group
     emr_managed_slave_security_group  = var.emr_slave_security_group
+    additional_master_security_groups = var.emr_master_additional_sg
     instance_profile                  = var.emr_ec2_instance_profile
   }
 
-  ebs_root_volume_size = "20"
+  ebs_root_volume_size = "50"
 
   // The configuration of the master instance can be requested as spot
   //  Given the instance type and the preset ebs size
@@ -70,6 +73,21 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   service_role     = var.emr_service_role
   autoscaling_role = var.emr_autoscaling_role
 
+  step {
+    action_on_failure = "TERMINATE_CLUSTER"
+    name              = "Setup Hadoop Debugging"
+
+    hadoop_jar_step {
+      jar  = "command-runner.jar"
+      args = ["state-pusher-script"]
+    }
+  }
+
+  # Optional: ignore outside changes to running cluster steps
+  lifecycle {
+    ignore_changes = [step]
+  }
+
 //  If the user should want any bootstrap action to take place
 //  this code should be uncommented
 //  bootstrap_action {
@@ -83,23 +101,23 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   //  inside the cluster... If the user does not want the configuration files exported
   //  to a S3 bucket, the user should comment this section
 
-  step {
-      name              = "Copy script file from s3."
-      action_on_failure = "CANCEL_AND_WAIT"
-      hadoop_jar_step {
-        jar  = "command-runner.jar"
-        args = ["aws", "s3", "cp", "s3://${var.name}/scripts/create-emr-client.sh", "/home/hadoop/"]
-      }
-  }
-
-  step {
-      name              = "Creating EMR Client configuration and exporting to S3"
-      action_on_failure = "CANCEL_AND_WAIT"
-      hadoop_jar_step {
-        jar  = "command-runner.jar"
-        args = ["sudo", "bash", "/home/hadoop/create-emr-client.sh", "s3://${var.name}"]
-      }
-  }
+//  step {
+//      name              = "Copy script file from s3."
+//      action_on_failure = "CANCEL_AND_WAIT"
+//      hadoop_jar_step {
+//        jar  = "command-runner.jar"
+//        args = ["aws", "s3", "cp", "s3://${var.name}/scripts/create-emr-client.sh", "/home/hadoop/"]
+//      }
+//  }
+//
+//  step {
+//      name              = "Creating EMR Client configuration and exporting to S3"
+//      action_on_failure = "CANCEL_AND_WAIT"
+//      hadoop_jar_step {
+//        jar  = "command-runner.jar"
+//        args = ["sudo", "bash", "/home/hadoop/create-emr-client.sh", "s3://${var.name}"]
+//      }
+//  }
 
 
   configurations_json = <<EOF
