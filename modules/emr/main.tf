@@ -9,7 +9,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   termination_protection            = false
   keep_job_flow_alive_when_no_steps = true
 
-//  custom_ami_id = var.ami_id
+  custom_ami_id = var.ami_id
 
   //  Setting the EC2 attributes, as the subnet the cluster will be included
   //  The key name to ssh into the cluster, The cluster's security groups
