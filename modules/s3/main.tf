@@ -40,7 +40,7 @@ resource "aws_s3_bucket_object" "shell_script_rstudio_spark_client" {
 
 // The code below is responsible to copy the shell script
 // that configures environment variables for RStudio
-resource "aws_s3_bucket_object" "shell_script_rstudio_spark_client" {
+resource "aws_s3_bucket_object" "shell_script_cfg" {
   bucket     = var.name
   key        = "scripts/post-installation-cfg.sh"
   source     = "scripts/post-installation-cfg.sh"
