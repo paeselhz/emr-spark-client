@@ -1,7 +1,7 @@
-//module "s3" {
-//  source = "./modules/s3"
-//  name   = var.name
-//}
+module "s3" {
+  source = "./modules/s3"
+  name   = var.name
+}
 
 module "iam" {
   source = "./modules/iam"

@@ -83,6 +83,24 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
     }
   }
 
+  step {
+      name              = "Copy script file from s3."
+      action_on_failure = "CANCEL_AND_WAIT"
+      hadoop_jar_step {
+        jar  = "command-runner.jar"
+        args = ["aws", "s3", "cp", "s3://${var.name}/scripts/post-installation-cfg.sh", "/tmp/"]
+      }
+  }
+
+  step {
+      name              = "Creating EMR Client configuration and exporting to S3"
+      action_on_failure = "CANCEL_AND_WAIT"
+      hadoop_jar_step {
+        jar  = "command-runner.jar"
+        args = ["sudo", "bash", "/tmp/post-installation-cfg.sh"]
+      }
+  }
+
   # Optional: ignore outside changes to running cluster steps
   lifecycle {
     ignore_changes = [step]
