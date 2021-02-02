@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "spark.sql.catalogImplementation hive" | sudo tee -a /etc/spark/conf/spark-defaults.conf
+
 # Configure environment variables for user & R
 echo "export SCALA_HOME=/usr/share/scala" >> /home/rstudio/.bashrc
 echo "export SPARK_HOME=/usr/lib/spark"  >> /home/rstudio/.bashrc
@@ -33,3 +35,10 @@ PATH=${PWD}:${PATH}
 EOF
 
 cat /tmp/Renvextra | sudo  tee -a /opt/R/4.0.3/lib/R/etc/Renviron
+
+# Adding RStudio user access to use hadoop
+usermod -aG rstudio hadoop
+su - hdfs -c "hdfs dfs -mkdir /user/rstudio"
+su - hdfs -c "hdfs dfs -chown rstudio:hadoop /user/rstudio"
+su - hdfs -c "hdfs dfs -chmod 755 /user/rstudio"
+

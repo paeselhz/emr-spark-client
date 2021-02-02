@@ -144,9 +144,22 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
     "Classification": "spark-defaults",
       "Properties": {
       "maximizeResourceAllocation": "true",
-      "spark.dynamicAllocation.enabled": "true"
+      "spark.dynamicAllocation.enabled": "true",
+      "spark.sql.catalogImplementation": "hive"
       }
+    },
+{
+    "Classification": "hive-site",
+    "Properties": {
+      "hive.metastore.client.factory.class": "com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory"
     }
+  },
+{
+    "Classification": "spark-hive-site",
+    "Properties": {
+      "hive.metastore.client.factory.class": "com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory"
+    }
+  }
   ]
   EOF
 }
