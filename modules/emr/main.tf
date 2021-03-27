@@ -93,7 +93,7 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
   }
 
   step {
-      name              = "Creating EMR Client configuration and exporting to S3"
+      name              = "Creating EMR users configuration"
       action_on_failure = "CANCEL_AND_WAIT"
       hadoop_jar_step {
         jar  = "command-runner.jar"
@@ -112,31 +112,6 @@ resource "aws_emr_cluster" "emr-spark-cluster" {
 //    name = "Bootstrap setup."
 //    path = "s3://${var.name}/scripts/bootstrap_actions.sh"
 //  }
-
-  //  To export the EMR configuration steps to a S3 bucket specified by the user
-  //  We execute this code as a step job inside the cluster
-  //  This copies the code from the S3 bucket that the code is saved, and run it
-  //  inside the cluster... If the user does not want the configuration files exported
-  //  to a S3 bucket, the user should comment this section
-
-//  step {
-//      name              = "Copy script file from s3."
-//      action_on_failure = "CANCEL_AND_WAIT"
-//      hadoop_jar_step {
-//        jar  = "command-runner.jar"
-//        args = ["aws", "s3", "cp", "s3://${var.name}/scripts/create-emr-client.sh", "/home/hadoop/"]
-//      }
-//  }
-//
-//  step {
-//      name              = "Creating EMR Client configuration and exporting to S3"
-//      action_on_failure = "CANCEL_AND_WAIT"
-//      hadoop_jar_step {
-//        jar  = "command-runner.jar"
-//        args = ["sudo", "bash", "/home/hadoop/create-emr-client.sh", "s3://${var.name}"]
-//      }
-//  }
-
 
   configurations_json = <<EOF
     [
