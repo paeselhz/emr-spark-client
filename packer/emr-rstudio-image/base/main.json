@@ -1,0 +1,56 @@
+{
+  "variables": {
+    "aws_region": "us-east-1",
+    "aws_vpc_id": "<AWS_VPC_ID>",
+    "aws_sub_id": "<AWS_SUBNET_ID>",
+    "base_name": "amzn2-ami-hvm-2",
+    "out_name": "emr-rstudio-image"
+  },
+  "builders": [
+    {
+      "ami_name": "{{user `out_name`}}-{{timestamp}}",
+      "type": "amazon-ebs",
+      "region": "{{user `aws_region`}}",
+      "instance_type": "t3.medium",
+      "ssh_username": "ec2-user",
+      "ena_support": true,
+      "sriov_support": true,
+      "vpc_id": "{{user `aws_vpc_id`}}",
+      "subnet_id": "{{user `aws_sub_id`}}",
+      "tags": {
+        "OS_TYPE": "Linux",
+        "OS_DISTRIBUTION": "Amazon",
+        "OS_VERSION": "2",
+        "TIMESTAMP": "{{timestamp}}",
+        "Provisioner": "Packer"
+      },
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "{{user `base_name`}}*",
+          "root-device-type": "ebs",
+          "architecture": "x86_64"
+        },
+        "owners": [
+          "amazon"
+        ],
+        "most_recent": true
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo amazon-linux-extras install -y ansible2 epel"
+      ]
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "{{template_dir}}/main.yml",
+      "role_paths": [
+        "ansible/roles/an_base"
+      ]
+    }
+  ]
+}

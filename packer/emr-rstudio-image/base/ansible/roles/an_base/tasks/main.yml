@@ -1,0 +1,10 @@
+---
+
+- name: Install OS packages and dependencies
+  include_tasks: 'os_packages.yml'
+
+- name: Install R
+  include_tasks: 'install_r.yml'
+
+- name: Install RStudio
+  include_tasks: 'install_rstudio.yml'
